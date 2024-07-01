@@ -145,3 +145,7 @@ No modules.
 | <a name="output_primary_master_hostname"></a> [primary\_master\_hostname](#output\_primary\_master\_hostname) | n/a |
 | <a name="output_primary_master_ip"></a> [primary\_master\_ip](#output\_primary\_master\_ip) | n/a |
 <!-- END_TF_DOCS -->
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
