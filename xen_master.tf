@@ -1,20 +1,20 @@
 resource "random_integer" "master" {
-    count = var.master_count
-    min   = 1000
-    max   = 9999
+  count = var.master_count
+  min   = 1000
+  max   = 9999
 }
 
 resource "random_uuid" "custom_token" {}
 
 locals {
   # Generate a random UUID and extract the first 32 characters
-  custom_token = substr(random_uuid.custom_token.result, 0, 32)
-  master_prefix = "${var.master_prefix}-${var.cluster_name}-master"
+  custom_token             = substr(random_uuid.custom_token.result, 0, 32)
+  master_prefix            = "${var.master_prefix}-${var.cluster_name}-master"
   microk8s_version_channel = var.microk8s_version == null ? "" : "--channel=${var.microk8s_version}"
 }
 
 resource "xenorchestra_cloud_config" "master" {
-  name  = "ubuntu-base-config-master-0-${var.cluster_name}"
+  name     = "ubuntu-base-config-master-0-${var.cluster_name}"
   template = <<EOF
 #cloud-config
 hostname: "${local.master_prefix}-${random_integer.master[0].result}.${var.cluster_dns_zone}"
@@ -166,23 +166,23 @@ resource "xenorchestra_vm" "master" {
   tags = concat(var.tags, var.master_tags, ["kubernetes.io/role:primary", "xcp-ng.org/deployment:${var.cluster_name}"])
 
   lifecycle {
-    ignore_changes = [ disk, affinity_host, template ]
+    ignore_changes = [disk, affinity_host, template]
   }
 }
 
 resource "null_resource" "sleep_while_master_readies_up" {
   provisioner "local-exec" {
-    command = "sleep 240"  # Sleep to until master is ready
+    command = "sleep 240" # Sleep to until master is ready
   }
 
-  depends_on = [ xenorchestra_vm.master ]
+  depends_on = [xenorchestra_vm.master]
 }
 
 resource "sshcommand_command" "get_kubeconfig" {
-  host               = xenorchestra_vm.master.ipv4_addresses[0]
-  command            = "sudo microk8s config get"
-  private_key        = file(var.private_ssh_key_path)
-  user = "cloud-user"
+  host        = xenorchestra_vm.master.ipv4_addresses[0]
+  command     = "sudo microk8s config get"
+  private_key = file(var.private_ssh_key_path)
+  user        = "cloud-user"
 
-  depends_on = [ null_resource.sleep_while_master_readies_up ]
+  depends_on = [null_resource.sleep_while_master_readies_up]
 }

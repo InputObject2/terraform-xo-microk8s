@@ -1,6 +1,6 @@
 resource "xenorchestra_cloud_config" "secondary" {
-  count = var.master_count - 1
-  name  = "ubuntu-base-config-master-${count.index + 1}"
+  count    = var.master_count - 1
+  name     = "ubuntu-base-config-master-${count.index + 1}"
   template = <<EOF
 #cloud-config
 hostname: "${local.master_prefix}-${random_integer.master[count.index + 1].result}.${var.cluster_dns_zone}"
@@ -78,7 +78,7 @@ EOF
 
 
 resource "xenorchestra_vm" "secondary" {
-  count = var.master_count - 1
+  count                = var.master_count - 1
   name_label           = "${local.master_prefix}-${random_integer.master[count.index + 1].result}"
   cloud_config         = xenorchestra_cloud_config.secondary[count.index].template
   cloud_network_config = var.cloud_network_config_template
@@ -107,8 +107,8 @@ resource "xenorchestra_vm" "secondary" {
   tags = concat(var.tags, var.master_tags, ["kubernetes.io/role:secondary", "xcp-ng.org/deployment:${var.cluster_name}"])
 
   lifecycle {
-    ignore_changes = [ disk, affinity_host, template ]
+    ignore_changes = [disk, affinity_host, template]
   }
 
-  depends_on = [ xenorchestra_vm.master, null_resource.sleep_while_master_readies_up ]
+  depends_on = [xenorchestra_vm.master, null_resource.sleep_while_master_readies_up]
 }

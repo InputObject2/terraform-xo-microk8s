@@ -4,18 +4,25 @@ terraform {
   required_providers {
     xenorchestra = {
       source  = "terra-farm/xenorchestra"
+      version = ">=0.26.1"
     }
     macaddress = {
-      source = "ivoronin/macaddress"
-      #version = "0.3.0"
-    }
-    gitlab = {
-      source = "gitlabhq/gitlab"
-      #version = "16.4.1"
+      source  = "ivoronin/macaddress"
+      version = ">=0.3.0"
     }
     sshcommand = {
-      source = "invidian/sshcommand"
-      #version = "0.2.2"
+      source  = "invidian/sshcommand"
+      version = ">=0.2.2"
+    }
+    null = {
+      source  = "hashicorp/null"
+      version = ">=3.2.2"
+    }
+    random = {
+      source  = "hashicorp/random"
+      version = ">=3.6.2"
     }
   }
+
+  required_version = ">= 1.0"
 }
