@@ -179,7 +179,7 @@ resource "null_resource" "sleep_while_master_readies_up" {
 }
 
 resource "sshcommand_command" "get_kubeconfig" {
-  host               = "${local.master_prefix}-${random_integer.master[0].result}.${var.dns_sub_zone}.${substr(lower(var.dns_zone), 0, length(var.dns_zone) - 1)}"
+  host               = xenorchestra_vm.master.ipv4_addresses[0]
   command            = "sudo microk8s config get"
   private_key        = file(var.private_ssh_key_path)
   user = "cloud-user"
