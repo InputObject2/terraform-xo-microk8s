@@ -15,11 +15,6 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v4
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20'
-
     - name: Bump Version and Create Release
       uses: phips28/gh-action-bump-version@v11.0.7
       env:
