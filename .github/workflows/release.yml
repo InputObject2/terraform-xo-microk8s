@@ -15,19 +15,17 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v4
 
-    - name: Bump Version and Create Release
-      uses: phips28/gh-action-bump-version@v11.0.7
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Get next version
+      uses: reecetech/version-increment@2024.4.3
+      id: version
       with:
-        tag-prefix: "v"
-        skip-tag: false
-        commit-message: "chore(release): bump version to {{version}} [skip ci]"
+        scheme: semver
+        increment: patch
 
     - name: Create GitHub Release
-      uses: softprops/action-gh-release@v2
+      uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        files: |
-          path/to/your/asset.zip
+        tag_name: ${{ steps.version.outputs.version }}
+        release_name: Release ${{ steps.version.outputs.version }}
