@@ -36,3 +36,21 @@ jobs:
 
     - name: TFLint
       run: tflint
+
+    - name: Install terraform-docs
+      run: |
+        curl -sL https://github.com/terraform-docs/terraform-docs/releases/download/v0.18.0/terraform-docs-v0.18.0-linux-amd64.tar.gz -o terraform-docs.tar.gz
+        mkdir -p /tmp/terraform-docs
+        tar -xzf terraform-docs.tar.gz -C /tmp/terraform-docs
+        chmod +x /tmp/terraform-docs/terraform-docs
+        sudo mv /tmp/terraform-docs/terraform-docs /usr/local/bin/
+
+    - name: Generate Terraform Docs
+      run: terraform-docs markdown table --output-file README.md .
+
+    - name: Check for Documentation Changes
+      run: |
+        if ! git diff --exit-code README.md; then
+          echo "::error::README.md is out of date. Please run 'terraform-docs' to update the documentation."
+          exit 1
+        fi
