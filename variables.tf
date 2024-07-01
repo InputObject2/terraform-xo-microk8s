@@ -203,6 +203,18 @@ variable "microk8s_version" {
   default     = null
 }
 
+variable "install_k8s_image_swapper" {
+  description = "This will add the chart by default to use the k8s-image-swapper and save on imagePulls to Dockerhub, which are rate-limited"
+  type        = bool
+  default     = false
+}
+
+variable "k8s_image_swapper_private_registy" {
+  description = "Point this to the FQDN of a private registry so the k8s-image-swapper can pull from there. Has no effect if `install_k8s_image_swapper` is unused"
+  type        = string
+  default     = ""
+}
+
 variable "cloud_network_config_template" {
   description = "Template for cloud network config"
   type        = string
