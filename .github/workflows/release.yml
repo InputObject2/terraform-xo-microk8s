@@ -11,15 +11,15 @@ jobs:
 
     steps:
     - name: Checkout Repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Setup Node.js
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v4
       with:
-        node-version: '14'
+        node-version: '20'
 
     - name: Bump Version and Create Release
-      uses: phips28/gh-action-bump-version@v9
+      uses: phips28/gh-action-bump-version@v11
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
@@ -28,7 +28,7 @@ jobs:
         commit-message: "chore(release): bump version to {{version}} [skip ci]"
 
     - name: Create GitHub Release
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
