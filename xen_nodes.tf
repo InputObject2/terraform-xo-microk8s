@@ -3,14 +3,14 @@ locals {
 }
 
 resource "random_integer" "node" {
-    count = var.node_count
-    min   = 1000
-    max   = 9999
+  count = var.node_count
+  min   = 1000
+  max   = 9999
 }
 
 resource "xenorchestra_cloud_config" "node" {
-  count = var.node_count
-  name  = "ubuntu-base-config-node-${count.index}"
+  count    = var.node_count
+  name     = "ubuntu-base-config-node-${count.index}"
   template = <<EOF
 #cloud-config
 hostname: "${local.node_prefix}-${random_integer.node[count.index].result}.${var.dns_sub_zone}.${lower(var.dns_zone)}"
@@ -70,7 +70,7 @@ firewall:
       source: 0.0.0.0/0
 EOF
 
-depends_on = [ xenorchestra_vm.master ]
+  depends_on = [xenorchestra_vm.master]
 }
 
 resource "xenorchestra_vm" "node" {
@@ -104,8 +104,8 @@ resource "xenorchestra_vm" "node" {
   tags = concat(var.tags, var.node_tags, ["kubernetes.io/role:worker", "xcp-ng.org/deployment:${var.cluster_name}"])
 
   lifecycle {
-    ignore_changes = [ disk, affinity_host, template ]
+    ignore_changes = [disk, affinity_host, template]
   }
 
-  depends_on = [ xenorchestra_vm.master, null_resource.sleep_while_master_readies_up, xenorchestra_vm.secondary ]
+  depends_on = [xenorchestra_vm.master, null_resource.sleep_while_master_readies_up, xenorchestra_vm.secondary]
 }

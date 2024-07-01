@@ -48,7 +48,7 @@ variable "node_xoa_network_name" {
 variable "node_tags" {
   description = "Tags to apply to worker nodes"
   type        = list(string)
-  default     = [
+  default = [
     "xcp-ng.org/arch:amd64",
     "xcp-ng.org/os:ubuntu"
   ]
@@ -104,7 +104,7 @@ variable "master_xoa_network_name" {
 variable "master_tags" {
   description = "Tags to apply to master nodes"
   type        = list(string)
-  default     = [
+  default = [
     "xcp-ng.org/arch:amd64",
     "xcp-ng.org/os:ubuntu"
   ]
@@ -192,9 +192,9 @@ variable "dns_sub_zone" {
 }
 
 variable "cluster_name" {
-    description = "Name used in the virtual machine names, not an actual Kubernetes settings"
-    type        = string
-    default     = "my-cluster"
+  description = "Name used in the virtual machine names, not an actual Kubernetes settings"
+  type        = string
+  default     = "my-cluster"
 }
 
 variable "microk8s_version" {
@@ -206,7 +206,7 @@ variable "microk8s_version" {
 variable "cloud_network_config_template" {
   description = "Template for cloud network config"
   type        = string
-  default = <<EOF
+  default     = <<EOF
 network:
   version: 1
   config:
@@ -218,7 +218,7 @@ EOF
 }
 
 variable "tags" {
-    description = "A list of key+value pairs to apply to the deployment"
-    type = list(string)
-    default = []
+  description = "A list of key+value pairs to apply to the deployment"
+  type        = list(string)
+  default     = []
 }
