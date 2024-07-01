@@ -53,7 +53,7 @@ write_files:
         target:
           type: generic
           generic:
-            repository: docker-private-registry.${substr(lower(var.dns_zone), 0, length(var.dns_zone) - 1)}
+            repository: ${var.k8s_image_swapper_private_registy}
 
       image:
         repository: inputobject2/k8s-image-swapper
@@ -94,7 +94,7 @@ runcmd:
     microk8s kubectl label node ${local.master_prefix}-${random_integer.master[0].result}.${var.dns_sub_zone}.${substr(lower(var.dns_zone), 0, length(var.dns_zone) - 1)} node-role.kubernetes.io/control-plane
     microk8s helm repo add estahn https://estahn.github.io/charts/
     microk8s helm repo update
-    microk8s helm install k8s-image-swapper estahn/k8s-image-swapper -n k8s-image-swapper --create-namespace --version 1.8.0 -f /tmp/k8s-image-swapper-values.yaml
+    ${var.install_k8s_image_swapper ? "microk8s helm install k8s-image-swapper estahn/k8s-image-swapper -n k8s-image-swapper --create-namespace --version 1.8.0 -f /tmp/k8s-image-swapper-values.yaml" : ""}
     microk8s enable metrics-server
 
 firewall:
