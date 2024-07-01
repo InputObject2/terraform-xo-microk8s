@@ -104,7 +104,7 @@ resource "xenorchestra_vm" "secondary" {
   wait_for_ip = true
   start_delay = var.start_delay
 
-  tags = concat(var.master_tags, ["inputobject2.github.io/cloud-os:ubuntu-20-04-focal", "kubernetes.io/role:secondary", "inputobject2.github.io/deployment:${var.cluster_name}"])
+  tags = concat(var.tags, var.master_tags, ["kubernetes.io/role:secondary", "xcp-ng.org/deployment:${var.cluster_name}"])
 
   lifecycle {
     ignore_changes = [ disk, affinity_host, template ]
