@@ -216,3 +216,9 @@ network:
     - type: dhcp
 EOF
 }
+
+variable "tags" {
+    description = "A list of key+value pairs to apply to the deployment"
+    type = list(string)
+    default = []
+}
