@@ -6,8 +6,8 @@ resource "xenorchestra_cloud_config" "secondary" {
 hostname: "${local.master_prefix}-${random_integer.master[count.index + 1].result}.${var.cluster_dns_zone}"
 
 users:
-  - name: cloud-user
-    gecos: cloud-user
+  - name: ${var.ssh_user}
+    gecos: ${var.ssh_user}
     shell: /bin/bash
     sudo: ALL=(ALL) NOPASSWD:ALL
     ssh_authorized_keys:
@@ -108,6 +108,10 @@ resource "xenorchestra_vm" "secondary" {
 
   lifecycle {
     ignore_changes = [disk, affinity_host, template]
+  }
+
+  timeouts {
+    create = var.vm_timeouts_create
   }
 
   depends_on = [xenorchestra_vm.master, null_resource.sleep_while_master_readies_up]

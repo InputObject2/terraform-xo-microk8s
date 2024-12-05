@@ -170,6 +170,12 @@ variable "cluster_dns_zone" {
   type        = string
 }
 
+variable "ssh_user" {
+  description = "Default user name"
+  type        = string
+  default     = "cloud-user"
+}
+
 variable "public_ssh_key" {
   description = "Public SSH key for accessing the nodes"
   type        = string
@@ -233,4 +239,10 @@ variable "tags" {
   description = "A list of key+value pairs to apply to the deployment"
   type        = list(string)
   default     = []
+}
+
+variable "vm_timeouts_create" {
+  description = "Timeout for VM creation"
+  type = string
+  default = "10m"
 }
