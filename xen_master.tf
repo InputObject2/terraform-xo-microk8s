@@ -186,7 +186,7 @@ resource "sshcommand_command" "get_kubeconfig" {
   host        = xenorchestra_vm.master.ipv4_addresses[0]
   command     = "sudo microk8s config get"
   private_key = file(var.private_ssh_key_path)
-  user        = ${var.ssh_user}
+  user        = "${var.ssh_user}"
 
   depends_on = [null_resource.sleep_while_master_readies_up]
 }
