@@ -37,11 +37,14 @@ module "microk8s_cluster" {
 
   # Other settings
   public_ssh_key   = "ssh-rsa AAAAB3N..."
+  ssh_user         = "cloud-user" # Define an ssh user. Default is cloud-user
 
   dns_zone         = "example.com."
   dns_sub_zone     = "k8s"
   cluster_dns_zone = "k8s.example.com."
   cluster_name     = "cluster"
+
+  vm_timeouts_create = "10m" # Define a timeout for resource creation
 }
 ```
 
