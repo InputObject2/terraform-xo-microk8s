@@ -7,6 +7,8 @@ provider "xenorchestra" {
   insecure = var.xoa_ignore_ssl # Or set XOA_INSECURE environment variable to any value
 }
 
+provider "macaddress" {}
+
 
 # docs : https://github.com/terra-farm/terraform-provider-xenorchestra/blob/master/docs/resources/vm.md
 
