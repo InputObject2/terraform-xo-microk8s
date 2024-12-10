@@ -16,8 +16,8 @@ resource "xenorchestra_cloud_config" "node" {
 hostname: "${local.node_prefix}-${random_integer.node[count.index].result}.${var.dns_sub_zone}.${lower(var.dns_zone)}"
 
 users:
-  - name: cloud-user
-    gecos: cloud-user
+  - name: ${var.ssh_user}
+    gecos: ${var.ssh_user}
     shell: /bin/bash
     sudo: ALL=(ALL) NOPASSWD:ALL
     ssh_authorized_keys:
@@ -56,18 +56,6 @@ runcmd:
     microk8s join ${xenorchestra_vm.master.ipv4_addresses[0]}:25000/${local.custom_token} --worker
     microk8s kubectl label node ${local.node_prefix}-${random_integer.node[count.index].result}.${var.dns_sub_zone}.${substr(lower(var.dns_zone), 0, length(var.dns_zone) - 1)} node-role.kubernetes.io/worker=worker
 
-firewall:
-  rules:
-    - name: Allow traffic on port 80
-      port: 80
-      protocol: tcp
-      action: accept
-      source: 0.0.0.0/0
-    - name: Allow traffic on port 443
-      port: 443
-      protocol: tcp
-      action: accept
-      source: 0.0.0.0/0
 EOF
 
   depends_on = [xenorchestra_vm.master]
@@ -105,6 +93,10 @@ resource "xenorchestra_vm" "node" {
 
   lifecycle {
     ignore_changes = [disk, affinity_host, template]
+  }
+
+  timeouts {
+    create = var.vm_timeouts_create
   }
 
   depends_on = [xenorchestra_vm.master, null_resource.sleep_while_master_readies_up, xenorchestra_vm.secondary]
