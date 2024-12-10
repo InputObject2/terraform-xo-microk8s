@@ -52,19 +52,20 @@ module "microk8s_cluster" {
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0 |
 | <a name="requirement_macaddress"></a> [macaddress](#requirement\_macaddress) | >=0.3.0 |
-| <a name="requirement_null"></a> [null](#requirement\_null) | >=3.2.2 |
-| <a name="requirement_random"></a> [random](#requirement\_random) | >=3.6.2 |
+| <a name="requirement_null"></a> [null](#requirement\_null) | >=3.2.3 |
+| <a name="requirement_random"></a> [random](#requirement\_random) | >=3.6.3 |
 | <a name="requirement_sshcommand"></a> [sshcommand](#requirement\_sshcommand) | >=0.2.2 |
-| <a name="requirement_xenorchestra"></a> [xenorchestra](#requirement\_xenorchestra) | >=0.26.1 |
+| <a name="requirement_xenorchestra"></a> [xenorchestra](#requirement\_xenorchestra) | 0.29.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_null"></a> [null](#provider\_null) | 3.2.2 |
-| <a name="provider_random"></a> [random](#provider\_random) | 3.6.2 |
+| <a name="provider_macaddress"></a> [macaddress](#provider\_macaddress) | 0.3.2 |
+| <a name="provider_null"></a> [null](#provider\_null) | 3.2.3 |
+| <a name="provider_random"></a> [random](#provider\_random) | 3.6.3 |
 | <a name="provider_sshcommand"></a> [sshcommand](#provider\_sshcommand) | 0.2.2 |
-| <a name="provider_xenorchestra"></a> [xenorchestra](#provider\_xenorchestra) | 0.26.1 |
+| <a name="provider_xenorchestra"></a> [xenorchestra](#provider\_xenorchestra) | 0.29.0 |
 
 ## Modules
 
@@ -74,21 +75,24 @@ No modules.
 
 | Name | Type |
 |------|------|
+| [macaddress_macaddress.mac_master_primary](https://registry.terraform.io/providers/ivoronin/macaddress/latest/docs/resources/macaddress) | resource |
+| [macaddress_macaddress.mac_master_secondaries](https://registry.terraform.io/providers/ivoronin/macaddress/latest/docs/resources/macaddress) | resource |
+| [macaddress_macaddress.mac_nodes](https://registry.terraform.io/providers/ivoronin/macaddress/latest/docs/resources/macaddress) | resource |
 | [null_resource.sleep_while_master_readies_up](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
 | [random_integer.master](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/integer) | resource |
 | [random_integer.node](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/integer) | resource |
 | [random_uuid.custom_token](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/uuid) | resource |
 | [sshcommand_command.get_kubeconfig](https://registry.terraform.io/providers/invidian/sshcommand/latest/docs/resources/command) | resource |
-| [xenorchestra_cloud_config.master](https://registry.terraform.io/providers/terra-farm/xenorchestra/latest/docs/resources/cloud_config) | resource |
-| [xenorchestra_cloud_config.node](https://registry.terraform.io/providers/terra-farm/xenorchestra/latest/docs/resources/cloud_config) | resource |
-| [xenorchestra_cloud_config.secondary](https://registry.terraform.io/providers/terra-farm/xenorchestra/latest/docs/resources/cloud_config) | resource |
-| [xenorchestra_vm.master](https://registry.terraform.io/providers/terra-farm/xenorchestra/latest/docs/resources/vm) | resource |
-| [xenorchestra_vm.node](https://registry.terraform.io/providers/terra-farm/xenorchestra/latest/docs/resources/vm) | resource |
-| [xenorchestra_vm.secondary](https://registry.terraform.io/providers/terra-farm/xenorchestra/latest/docs/resources/vm) | resource |
-| [xenorchestra_network.master](https://registry.terraform.io/providers/terra-farm/xenorchestra/latest/docs/data-sources/network) | data source |
-| [xenorchestra_network.node](https://registry.terraform.io/providers/terra-farm/xenorchestra/latest/docs/data-sources/network) | data source |
-| [xenorchestra_pool.xcp_ng_master](https://registry.terraform.io/providers/terra-farm/xenorchestra/latest/docs/data-sources/pool) | data source |
-| [xenorchestra_pool.xcp_ng_node](https://registry.terraform.io/providers/terra-farm/xenorchestra/latest/docs/data-sources/pool) | data source |
+| [xenorchestra_cloud_config.master](https://registry.terraform.io/providers/vatesfr/xenorchestra/0.29.0/docs/resources/cloud_config) | resource |
+| [xenorchestra_cloud_config.node](https://registry.terraform.io/providers/vatesfr/xenorchestra/0.29.0/docs/resources/cloud_config) | resource |
+| [xenorchestra_cloud_config.secondary](https://registry.terraform.io/providers/vatesfr/xenorchestra/0.29.0/docs/resources/cloud_config) | resource |
+| [xenorchestra_vm.master](https://registry.terraform.io/providers/vatesfr/xenorchestra/0.29.0/docs/resources/vm) | resource |
+| [xenorchestra_vm.node](https://registry.terraform.io/providers/vatesfr/xenorchestra/0.29.0/docs/resources/vm) | resource |
+| [xenorchestra_vm.secondary](https://registry.terraform.io/providers/vatesfr/xenorchestra/0.29.0/docs/resources/vm) | resource |
+| [xenorchestra_network.master](https://registry.terraform.io/providers/vatesfr/xenorchestra/0.29.0/docs/data-sources/network) | data source |
+| [xenorchestra_network.node](https://registry.terraform.io/providers/vatesfr/xenorchestra/0.29.0/docs/data-sources/network) | data source |
+| [xenorchestra_pool.xcp_ng_master](https://registry.terraform.io/providers/vatesfr/xenorchestra/0.29.0/docs/data-sources/pool) | data source |
+| [xenorchestra_pool.xcp_ng_node](https://registry.terraform.io/providers/vatesfr/xenorchestra/0.29.0/docs/data-sources/pool) | data source |
 
 ## Inputs
 
@@ -103,6 +107,7 @@ No modules.
 | <a name="input_k8s_image_swapper_private_registy"></a> [k8s\_image\_swapper\_private\_registy](#input\_k8s\_image\_swapper\_private\_registy) | Point this to the FQDN of a private registry so the k8s-image-swapper can pull from there. Has no effect if `install_k8s_image_swapper` is unused | `string` | `""` | no |
 | <a name="input_master_count"></a> [master\_count](#input\_master\_count) | Number of master nodes to deploy | `number` | `3` | no |
 | <a name="input_master_cpu_count"></a> [master\_cpu\_count](#input\_master\_cpu\_count) | Number of CPUs for each master node | `number` | `2` | no |
+| <a name="input_master_expected_cidr"></a> [master\_expected\_cidr](#input\_master\_expected\_cidr) | Expected CIDR for master nodes, used for checking if the virtual machine is now ready. Replaces the old `wait_for_ip` | `string` | `"10.0.0.0/16"` | no |
 | <a name="input_master_memory_gb"></a> [master\_memory\_gb](#input\_master\_memory\_gb) | Memory in GB for each master node | `number` | `4` | no |
 | <a name="input_master_os_disk_size"></a> [master\_os\_disk\_size](#input\_master\_os\_disk\_size) | OS disk size in GB for each master node | `number` | `32` | no |
 | <a name="input_master_os_disk_xoa_sr_uuid"></a> [master\_os\_disk\_xoa\_sr\_uuid](#input\_master\_os\_disk\_xoa\_sr\_uuid) | Storage repository UUID for master node OS disks | `list(string)` | n/a | yes |
@@ -114,6 +119,7 @@ No modules.
 | <a name="input_microk8s_version"></a> [microk8s\_version](#input\_microk8s\_version) | The snap channel version to install, for example `1.29/stable`. Defaults to latest if not specified | `string` | `null` | no |
 | <a name="input_node_count"></a> [node\_count](#input\_node\_count) | Number of worker nodes to deploy | `number` | `0` | no |
 | <a name="input_node_cpu_count"></a> [node\_cpu\_count](#input\_node\_cpu\_count) | Number of CPUs for each worker node | `number` | `4` | no |
+| <a name="input_node_expected_cidr"></a> [node\_expected\_cidr](#input\_node\_expected\_cidr) | Expected CIDR for nodes, used for checking if the virtual machine is now ready. Replaces the old `wait_for_ip` | `string` | `"10.0.0.0/16"` | no |
 | <a name="input_node_memory_gb"></a> [node\_memory\_gb](#input\_node\_memory\_gb) | Memory in GB for each worker node | `number` | `8` | no |
 | <a name="input_node_os_disk_size"></a> [node\_os\_disk\_size](#input\_node\_os\_disk\_size) | OS disk size in GB for each worker node | `number` | `32` | no |
 | <a name="input_node_os_disk_xoa_sr_uuid"></a> [node\_os\_disk\_xoa\_sr\_uuid](#input\_node\_os\_disk\_xoa\_sr\_uuid) | Storage repository UUID for worker node OS disks | `list(string)` | n/a | yes |

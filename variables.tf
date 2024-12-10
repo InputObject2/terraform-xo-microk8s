@@ -45,6 +45,12 @@ variable "node_xoa_network_name" {
   default     = null
 }
 
+variable "node_expected_cidr" {
+  description = "Expected CIDR for nodes, used for checking if the virtual machine is now ready. Replaces the old `wait_for_ip`"
+  type        = string
+  default     = "10.0.0.0/16"
+}
+
 variable "node_tags" {
   description = "Tags to apply to worker nodes"
   type        = list(string)
@@ -99,6 +105,12 @@ variable "master_xoa_network_name" {
   description = "Network name for master nodes in Xen Orchestra (overrides `xoa_network_name`)"
   type        = string
   default     = null
+}
+
+variable "master_expected_cidr" {
+  description = "Expected CIDR for master nodes, used for checking if the virtual machine is now ready. Replaces the old `wait_for_ip`"
+  type        = string
+  default     = "10.0.0.0/16"
 }
 
 variable "master_tags" {

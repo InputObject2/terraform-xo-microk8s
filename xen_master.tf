@@ -13,6 +13,10 @@ locals {
   microk8s_version_channel = var.microk8s_version == null ? "" : "--channel=${var.microk8s_version}"
 }
 
+resource "macaddress" "mac_master_primary" {
+  prefix = [0, 22, 62]
+}
+
 resource "xenorchestra_cloud_config" "master" {
   name     = "ubuntu-base-config-master-0-${var.cluster_name}"
   template = <<EOF
@@ -28,8 +32,9 @@ users:
     ssh_authorized_keys:
       - ${var.public_ssh_key}
 
+package_update: true
+
 packages:
-  - xe-guest-utilities
   - open-iscsi
   - lsscsi
   - sg3-utils
@@ -70,6 +75,9 @@ write_files:
           memory: 80Mi
 
 runcmd:
+  - wget https://github.com/xenserver/xe-guest-utilities/releases/download/v8.4.0/xe-guest-utilities_8.4.0-1_amd64.deb
+  - dpkg -i xe-guest-utilities_8.4.0-1_amd64.deb
+
   - |
     netplan apply
     snap install microk8s --classic ${local.microk8s_version_channel}
@@ -97,34 +105,6 @@ runcmd:
     ${var.install_k8s_image_swapper ? "microk8s helm install k8s-image-swapper estahn/k8s-image-swapper -n k8s-image-swapper --create-namespace --version 1.8.0 -f /tmp/k8s-image-swapper-values.yaml" : ""}
     microk8s enable metrics-server
 
-firewall:
-  rules:
-    - name: Allow traffic on port 16443
-      port: 16443
-      protocol: tcp
-      action: accept
-      source: 0.0.0.0/0
-    - name: Allow traffic on port 80
-      port: 80
-      protocol: tcp
-      action: accept
-      source: 0.0.0.0/0
-    - name: Allow traffic on port 443
-      port: 443
-      protocol: tcp
-      action: accept
-      source: 0.0.0.0/0
-    - name: Allow traffic on port 25000
-      port: 25000
-      protocol: tcp
-      action: accept
-      source: 0.0.0.0/0
-    - name: Allow traffic on port 32000
-      port: 32000
-      protocol: tcp
-      action: accept
-      source: 0.0.0.0/0
-
 power_state:
   delay: now
   mode: reboot
@@ -147,8 +127,9 @@ resource "xenorchestra_vm" "master" {
   name_description = "${local.master_prefix}-${random_integer.master[0].result}.${var.dns_sub_zone}.${substr(lower(var.dns_zone), 0, length(var.dns_zone) - 1)}"
 
   network {
-    network_id  = data.xenorchestra_network.master.id
-    mac_address = local.mac_address_list[random_integer.master[0].result]
+    network_id       = data.xenorchestra_network.master.id
+    mac_address      = macaddress.mac_master_primary.address
+    expected_ip_cidr = var.master_expected_cidr
   }
 
   disk {
@@ -160,8 +141,8 @@ resource "xenorchestra_vm" "master" {
   cpus       = var.master_cpu_count
   memory_max = var.master_memory_gb * 1024 * 1024 * 1024 # GB to B
 
-  wait_for_ip = true
-  start_delay = var.start_delay
+  destroy_cloud_config_vdi_after_boot = false
+  start_delay                         = var.start_delay
 
   tags = concat(var.tags, var.master_tags, ["kubernetes.io/role:primary", "xcp-ng.org/deployment:${var.cluster_name}"])
 

@@ -8,6 +8,11 @@ resource "random_integer" "node" {
   max   = 9999
 }
 
+resource "macaddress" "mac_nodes" {
+  count  = var.node_count
+  prefix = [0, 22, 62]
+}
+
 resource "xenorchestra_cloud_config" "node" {
   count    = var.node_count
   name     = "ubuntu-base-config-node-${count.index}"
@@ -24,7 +29,6 @@ users:
       - ${var.public_ssh_key}
 
 packages:
-  - xe-guest-utilities
   - open-iscsi
   - lsscsi
   - sg3-utils
@@ -34,6 +38,8 @@ packages:
   - jq
 
 runcmd:
+  - wget https://github.com/xenserver/xe-guest-utilities/releases/download/v8.4.0/xe-guest-utilities_8.4.0-1_amd64.deb
+  - dpkg -i xe-guest-utilities_8.4.0-1_amd64.deb
   - |
     netplan apply
     snap install microk8s --classic
@@ -55,19 +61,6 @@ runcmd:
     microk8s start
     microk8s join ${xenorchestra_vm.master.ipv4_addresses[0]}:25000/${local.custom_token} --worker
     microk8s kubectl label node ${local.node_prefix}-${random_integer.node[count.index].result}.${var.dns_sub_zone}.${substr(lower(var.dns_zone), 0, length(var.dns_zone) - 1)} node-role.kubernetes.io/worker=worker
-
-firewall:
-  rules:
-    - name: Allow traffic on port 80
-      port: 80
-      protocol: tcp
-      action: accept
-      source: 0.0.0.0/0
-    - name: Allow traffic on port 443
-      port: 443
-      protocol: tcp
-      action: accept
-      source: 0.0.0.0/0
 EOF
 
   depends_on = [xenorchestra_vm.master]
@@ -85,8 +78,9 @@ resource "xenorchestra_vm" "node" {
   name_description = "${local.node_prefix}-${random_integer.node[count.index].result}.${var.dns_sub_zone}.${substr(lower(var.dns_zone), 0, length(var.dns_zone) - 1)}"
 
   network {
-    network_id  = data.xenorchestra_network.node.id
-    mac_address = local.mac_address_list[random_integer.node[count.index].result]
+    network_id       = data.xenorchestra_network.node.id
+    mac_address      = macaddress.mac_nodes[count.index].address
+    expected_ip_cidr = var.node_expected_cidr
   }
 
   disk {
@@ -98,8 +92,8 @@ resource "xenorchestra_vm" "node" {
   cpus       = var.node_cpu_count
   memory_max = var.node_memory_gb * 1024 * 1024 * 1024 # GB to B
 
-  wait_for_ip = true
-  start_delay = var.start_delay
+  start_delay                         = var.start_delay
+  destroy_cloud_config_vdi_after_boot = false
 
   tags = concat(var.tags, var.node_tags, ["kubernetes.io/role:worker", "xcp-ng.org/deployment:${var.cluster_name}"])
 
