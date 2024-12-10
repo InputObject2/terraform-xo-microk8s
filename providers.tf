@@ -3,8 +3,8 @@
 terraform {
   required_providers {
     xenorchestra = {
-      source  = "terra-farm/xenorchestra"
-      version = ">=0.26.1"
+      source  = "vatesfr/xenorchestra"
+      version = "0.29.0"
     }
     macaddress = {
       source  = "ivoronin/macaddress"
