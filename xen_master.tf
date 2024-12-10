@@ -97,40 +97,11 @@ runcmd:
     ${var.install_k8s_image_swapper ? "microk8s helm install k8s-image-swapper estahn/k8s-image-swapper -n k8s-image-swapper --create-namespace --version 1.8.0 -f /tmp/k8s-image-swapper-values.yaml" : ""}
     microk8s enable metrics-server
 
-firewall:
-  rules:
-    - name: Allow traffic on port 16443
-      port: 16443
-      protocol: tcp
-      action: accept
-      source: 0.0.0.0/0
-    - name: Allow traffic on port 80
-      port: 80
-      protocol: tcp
-      action: accept
-      source: 0.0.0.0/0
-    - name: Allow traffic on port 443
-      port: 443
-      protocol: tcp
-      action: accept
-      source: 0.0.0.0/0
-    - name: Allow traffic on port 25000
-      port: 25000
-      protocol: tcp
-      action: accept
-      source: 0.0.0.0/0
-    - name: Allow traffic on port 32000
-      port: 32000
-      protocol: tcp
-      action: accept
-      source: 0.0.0.0/0
-
 power_state:
   delay: now
   mode: reboot
   message: Rebooting to make sure master is up
   timeout: 60
-  condition: true
 
 EOF
 }

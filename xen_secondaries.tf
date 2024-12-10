@@ -46,33 +46,7 @@ runcmd:
     microk8s join ${xenorchestra_vm.master.ipv4_addresses[0]}:25000/${local.custom_token}
     microk8s kubectl label node ${local.master_prefix}-${random_integer.master[count.index + 1].result}.${var.dns_sub_zone}.${substr(lower(var.dns_zone), 0, length(var.dns_zone) - 1)} node-role.kubernetes.io/control-plane
 
-firewall:
-  rules:
-    - name: Allow traffic on port 16443
-      port: 16443
-      protocol: tcp
-      action: accept
-      source: 0.0.0.0/0
-    - name: Allow traffic on port 80
-      port: 80
-      protocol: tcp
-      action: accept
-      source: 0.0.0.0/0
-    - name: Allow traffic on port 443
-      port: 443
-      protocol: tcp
-      action: accept
-      source: 0.0.0.0/0
-    - name: Allow traffic on port 25000
-      port: 25000
-      protocol: tcp
-      action: accept
-      source: 0.0.0.0/0
-    - name: Allow traffic on port 32000
-      port: 32000
-      protocol: tcp
-      action: accept
-      source: 0.0.0.0/0
+
 EOF
 }
 

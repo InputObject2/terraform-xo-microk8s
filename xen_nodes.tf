@@ -56,18 +56,6 @@ runcmd:
     microk8s join ${xenorchestra_vm.master.ipv4_addresses[0]}:25000/${local.custom_token} --worker
     microk8s kubectl label node ${local.node_prefix}-${random_integer.node[count.index].result}.${var.dns_sub_zone}.${substr(lower(var.dns_zone), 0, length(var.dns_zone) - 1)} node-role.kubernetes.io/worker=worker
 
-firewall:
-  rules:
-    - name: Allow traffic on port 80
-      port: 80
-      protocol: tcp
-      action: accept
-      source: 0.0.0.0/0
-    - name: Allow traffic on port 443
-      port: 443
-      protocol: tcp
-      action: accept
-      source: 0.0.0.0/0
 EOF
 
   depends_on = [xenorchestra_vm.master]
