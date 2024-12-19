@@ -11,6 +11,11 @@ resource "random_integer" "node" {
 resource "macaddress" "mac_nodes" {
   count  = var.node_count
   prefix = [0, 22, 62]
+
+  lifecycle {
+    ignore_changes = [prefix]
+  }
+
 }
 
 resource "xenorchestra_cloud_config" "node" {

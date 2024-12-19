@@ -52,6 +52,11 @@ EOF
 resource "macaddress" "mac_master_secondaries" {
   count  = var.master_count - 1
   prefix = [0, 22, 62]
+
+  lifecycle {
+    ignore_changes = [prefix]
+  }
+
 }
 
 

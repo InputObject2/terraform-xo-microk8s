@@ -15,6 +15,11 @@ locals {
 
 resource "macaddress" "mac_master_primary" {
   prefix = [0, 22, 62]
+
+  lifecycle {
+    ignore_changes = [prefix]
+  }
+
 }
 
 resource "xenorchestra_cloud_config" "master" {
