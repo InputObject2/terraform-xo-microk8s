@@ -1,15 +1,3 @@
-provider "xenorchestra" {
-  # Configuration options
-  # Must be ws or wss
-  url      = var.xoa_api_url    # Or set XOA_URL environment variable
-  username = var.xoa_username   # Or set XOA_USER environment variable
-  password = var.xoa_password   # Or set XOA_PASSWORD environment variable
-  insecure = var.xoa_ignore_ssl # Or set XOA_INSECURE environment variable to any value
-}
-
-provider "macaddress" {}
-
-
 # docs : https://github.com/terra-farm/terraform-provider-xenorchestra/blob/master/docs/resources/vm.md
 
 locals {

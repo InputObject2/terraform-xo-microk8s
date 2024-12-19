@@ -123,11 +123,6 @@ variable "master_tags" {
 }
 
 # Xen Orchestra Settings
-variable "xoa_api_url" {
-  description = "URL for Xen Orchestra API (can be set via XOA_API_URL environment variable)"
-  type        = string
-}
-
 variable "xoa_pool_name" {
   description = "Default name of the XCP-ng pool as seen in Xen Orchestra"
   type        = string
@@ -152,23 +147,6 @@ variable "node_xoa_pool_name" {
   default     = null
 }
 
-variable "xoa_username" {
-  description = "Username for Xen Orchestra API (can be set via XOA_USERNAME environment variable)"
-  type        = string
-  default     = null
-}
-
-variable "xoa_password" {
-  description = "Password for Xen Orchestra API (can be set via XOA_PASSWORD environment variable)"
-  type        = string
-  default     = null
-}
-
-variable "xoa_ignore_ssl" {
-  description = "Ignore SSL verification for Xen Orchestra API (can be set via XOA_IGNORE_SSL environment variable)"
-  type        = bool
-  default     = null
-}
 
 variable "start_delay" {
   description = "The amount of time the cluster virtual machines will wait on XCP-NG host startup"
