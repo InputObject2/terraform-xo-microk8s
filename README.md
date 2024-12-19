@@ -132,12 +132,8 @@ No modules.
 | <a name="input_public_ssh_key"></a> [public\_ssh\_key](#input\_public\_ssh\_key) | Public SSH key for accessing the nodes | `string` | n/a | yes |
 | <a name="input_start_delay"></a> [start\_delay](#input\_start\_delay) | The amount of time the cluster virtual machines will wait on XCP-NG host startup | `number` | `0` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | A list of key+value pairs to apply to the deployment | `list(string)` | `[]` | no |
-| <a name="input_xoa_api_url"></a> [xoa\_api\_url](#input\_xoa\_api\_url) | URL for Xen Orchestra API (can be set via XOA\_API\_URL environment variable) | `string` | n/a | yes |
-| <a name="input_xoa_ignore_ssl"></a> [xoa\_ignore\_ssl](#input\_xoa\_ignore\_ssl) | Ignore SSL verification for Xen Orchestra API (can be set via XOA\_IGNORE\_SSL environment variable) | `bool` | `null` | no |
 | <a name="input_xoa_network_name"></a> [xoa\_network\_name](#input\_xoa\_network\_name) | Default network for virtual machines as seen in Xen Orchestra | `string` | `null` | no |
-| <a name="input_xoa_password"></a> [xoa\_password](#input\_xoa\_password) | Password for Xen Orchestra API (can be set via XOA\_PASSWORD environment variable) | `string` | `null` | no |
 | <a name="input_xoa_pool_name"></a> [xoa\_pool\_name](#input\_xoa\_pool\_name) | Default name of the XCP-ng pool as seen in Xen Orchestra | `string` | `null` | no |
-| <a name="input_xoa_username"></a> [xoa\_username](#input\_xoa\_username) | Username for Xen Orchestra API (can be set via XOA\_USERNAME environment variable) | `string` | `null` | no |
 
 ## Outputs
 
