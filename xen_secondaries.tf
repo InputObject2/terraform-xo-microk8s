@@ -14,7 +14,6 @@ users:
       - ${var.public_ssh_key}
 
 packages:
-  - xe-guest-utilities
   - open-iscsi
   - lsscsi
   - sg3-utils
@@ -36,6 +35,9 @@ runcmd:
         find_multipaths yes
     }
     EOD
+
+    wget https://github.com/xenserver/xe-guest-utilities/releases/download/v8.4.0/xe-guest-utilities_8.4.0-1_amd64.deb
+    dpkg -i xe-guest-utilities_8.4.0-1_amd64.deb
 
     systemctl enable multipath-tools.service
     systemctl restart multipath-tools
@@ -64,6 +66,7 @@ resource "xenorchestra_vm" "secondary" {
   network {
     network_id  = data.xenorchestra_network.master.id
     mac_address = local.mac_address_list[random_integer.master[count.index + 1].result]
+    expected_ip_cidr = var.expected_ip_cidr
   }
 
   disk {
@@ -75,7 +78,6 @@ resource "xenorchestra_vm" "secondary" {
   cpus       = var.master_cpu_count
   memory_max = var.master_memory_gb * 1024 * 1024 * 1024 # GB to B
 
-  wait_for_ip = true
   start_delay = var.start_delay
 
   tags = concat(var.tags, var.master_tags, ["kubernetes.io/role:secondary", "xcp-ng.org/deployment:${var.cluster_name}"])

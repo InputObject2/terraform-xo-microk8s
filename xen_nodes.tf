@@ -24,7 +24,6 @@ users:
       - ${var.public_ssh_key}
 
 packages:
-  - xe-guest-utilities
   - open-iscsi
   - lsscsi
   - sg3-utils
@@ -35,6 +34,7 @@ packages:
 
 runcmd:
   - |
+    
     netplan apply
     snap install microk8s --classic
     ufw allow in on cni0 && sudo ufw allow out on cni0
@@ -46,6 +46,9 @@ runcmd:
         find_multipaths yes
     }
     EOD
+
+    wget https://github.com/xenserver/xe-guest-utilities/releases/download/v8.4.0/xe-guest-utilities_8.4.0-1_amd64.deb
+    dpkg -i xe-guest-utilities_8.4.0-1_amd64.deb
 
     systemctl enable multipath-tools.service
     systemctl restart multipath-tools
@@ -75,6 +78,7 @@ resource "xenorchestra_vm" "node" {
   network {
     network_id  = data.xenorchestra_network.node.id
     mac_address = local.mac_address_list[random_integer.node[count.index].result]
+    expected_ip_cidr = var.expected_ip_cidr
   }
 
   disk {
@@ -86,7 +90,6 @@ resource "xenorchestra_vm" "node" {
   cpus       = var.node_cpu_count
   memory_max = var.node_memory_gb * 1024 * 1024 * 1024 # GB to B
 
-  wait_for_ip = true
   start_delay = var.start_delay
 
   tags = concat(var.tags, var.node_tags, ["kubernetes.io/role:worker", "xcp-ng.org/deployment:${var.cluster_name}"])

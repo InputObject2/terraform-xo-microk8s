@@ -29,7 +29,6 @@ users:
       - ${var.public_ssh_key}
 
 packages:
-  - xe-guest-utilities
   - open-iscsi
   - lsscsi
   - sg3-utils
@@ -37,37 +36,6 @@ packages:
   - scsitools
   - cifs-utils
   - jq
-
-write_files:
-  - path: /tmp/k8s-image-swapper-values.yaml
-    content: |
-      config:
-        dryRun: false
-        logFormat: console
-        logLevel: debug
-        imageSwapPolicy: always
-        imageCopyPolicy: immediate
-        source:
-          filters:
-          - jmespath: obj.metadata.namespace == 'k8s-image-swapper'
-        target:
-          type: generic
-          generic:
-            repository: ${var.k8s_image_swapper_private_registy}
-
-      image:
-        repository: inputobject2/k8s-image-swapper
-        pullPolicy: Always
-        # Overrides the image tag whose default is the chart appVersion.
-        tag: "v1.5.9-noauth"
-
-      resources:
-        limits:
-          cpu: 2
-          memory: 500Mi
-        requests:
-          cpu: 100m
-          memory: 80Mi
 
 runcmd:
   - |
@@ -82,6 +50,9 @@ runcmd:
         find_multipaths yes
     }
     EOD
+
+    wget https://github.com/xenserver/xe-guest-utilities/releases/download/v8.4.0/xe-guest-utilities_8.4.0-1_amd64.deb
+    dpkg -i xe-guest-utilities_8.4.0-1_amd64.deb
 
     systemctl enable multipath-tools.service
     systemctl restart multipath-tools
@@ -120,6 +91,7 @@ resource "xenorchestra_vm" "master" {
   network {
     network_id  = data.xenorchestra_network.master.id
     mac_address = local.mac_address_list[random_integer.master[0].result]
+    expected_ip_cidr = var.expected_ip_cidr
   }
 
   disk {
@@ -131,7 +103,6 @@ resource "xenorchestra_vm" "master" {
   cpus       = var.master_cpu_count
   memory_max = var.master_memory_gb * 1024 * 1024 * 1024 # GB to B
 
-  wait_for_ip = true
   start_delay = var.start_delay
 
   tags = concat(var.tags, var.master_tags, ["kubernetes.io/role:primary", "xcp-ng.org/deployment:${var.cluster_name}"])

@@ -246,3 +246,9 @@ variable "vm_timeouts_create" {
   type = string
   default = "10m"
 }
+
+variable "expected_ip_cidr" {
+  description = "Expected IP CIDR"
+  type = string
+  default = "10.40.0.0/16"
+}
