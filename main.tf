@@ -11,6 +11,10 @@ locals {
   custom_token             = substr(random_uuid.custom_token.result, 0, 32)
   master_prefix            = "${var.master_prefix}-${var.cluster_name}-master"
   microk8s_version_channel = var.microk8s_version == null ? "" : "--channel=${var.microk8s_version}"
+
+  # Use caller-supplied MAC for the primary master when provided (for static DHCP lease binding),
+  # otherwise fall back to the internally generated one.
+  effective_master_primary_mac = var.master_mac_addresses != null ? var.master_mac_addresses[0] : macaddress.mac_master_primary.address
 }
 
 resource "macaddress" "mac_master_primary" {
@@ -133,7 +137,7 @@ resource "xenorchestra_vm" "master" {
 
   network {
     network_id       = data.xenorchestra_network.master.id
-    mac_address      = macaddress.mac_master_primary.address
+    mac_address      = local.effective_master_primary_mac
     expected_ip_cidr = var.master_expected_cidr
   }
 

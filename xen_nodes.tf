@@ -1,5 +1,9 @@
 locals {
   node_prefix = "${var.node_prefix}-${var.cluster_name}-node"
+
+  # Use caller-supplied MACs for worker nodes when provided,
+  # otherwise fall back to the internally generated ones.
+  effective_node_macs = var.node_mac_addresses != null ? var.node_mac_addresses : [for m in macaddress.mac_nodes : m.address]
 }
 
 resource "random_integer" "node" {
@@ -84,7 +88,7 @@ resource "xenorchestra_vm" "node" {
 
   network {
     network_id       = data.xenorchestra_network.node.id
-    mac_address      = macaddress.mac_nodes[count.index].address
+    mac_address      = local.effective_node_macs[count.index]
     expected_ip_cidr = var.node_expected_cidr
   }
 

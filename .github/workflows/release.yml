@@ -1,31 +1,20 @@
-name: Automated Version Bump and Release
+name: Release Please
 
 on:
   push:
     branches:
       - main
 
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
 jobs:
-  release:
-    permissions:
-      contents: write
+  release-please:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v4
-
-    - name: Get next version
-      uses: reecetech/version-increment@2024.4.3
-      id: version
-      with:
-        scheme: semver
-        increment: patch
-
-    - name: Create GitHub Release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ steps.version.outputs.version }}
-        release_name: Release ${{ steps.version.outputs.version }}
+      - uses: googleapis/release-please-action@v4
+        with:
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json

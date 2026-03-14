@@ -1,0 +1,6 @@
+# .trivyignore — Trivy ignore file for terraform-xo-microk8s.
+# Add finding IDs here to suppress known-acceptable findings.
+# Format: one ID per line, optionally with a comment.
+#
+# Examples:
+#   AVD-TF-0123     # terraform finding suppressed — mitigated elsewhere

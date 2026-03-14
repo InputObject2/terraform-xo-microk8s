@@ -224,3 +224,23 @@ variable "tags" {
   type        = list(string)
   default     = []
 }
+
+variable "master_mac_addresses" {
+  description = "Optional list of MAC addresses (length == master_count) to pin to master node NICs. When provided, the module skips internal MAC generation and uses these instead, which is required for static DHCP leases created outside this module (e.g. by a network provisioning module) to bind correctly. MACs must be colon-separated lowercase hex (e.g. '00:16:3e:ab:cd:ef')."
+  type        = list(string)
+  default     = null
+  validation {
+    condition     = alltrue([for mac in coalesce(var.master_mac_addresses, []) : can(regex("^([0-9a-fA-F]{2}:){5}[0-9a-fA-F]{2}$", mac))])
+    error_message = "Each entry in master_mac_addresses must be a colon-separated lowercase hex MAC address (e.g. '00:16:3e:ab:cd:ef')."
+  }
+}
+
+variable "node_mac_addresses" {
+  description = "Optional list of MAC addresses (length == node_count) to pin to worker node NICs. When provided, the module skips internal MAC generation and uses these instead, which is required for static DHCP leases created outside this module (e.g. by a network provisioning module) to bind correctly. MACs must be colon-separated lowercase hex (e.g. '00:16:3e:ab:cd:ef')."
+  type        = list(string)
+  default     = null
+  validation {
+    condition     = alltrue([for mac in coalesce(var.node_mac_addresses, []) : can(regex("^([0-9a-fA-F]{2}:){5}[0-9a-fA-F]{2}$", mac))])
+    error_message = "Each entry in node_mac_addresses must be a colon-separated lowercase hex MAC address (e.g. '00:16:3e:ab:cd:ef')."
+  }
+}
