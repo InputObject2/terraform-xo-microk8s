@@ -59,6 +59,12 @@ resource "macaddress" "mac_master_secondaries" {
 
 }
 
+locals {
+  # Use caller-supplied MACs for secondary masters when provided (indices 1..master_count-1),
+  # otherwise fall back to the internally generated ones.
+  effective_master_secondary_macs = var.master_mac_addresses != null ? slice(var.master_mac_addresses, 1, var.master_count) : [for m in macaddress.mac_master_secondaries : m.address]
+}
+
 
 resource "xenorchestra_vm" "secondary" {
   count                = var.master_count - 1
@@ -72,7 +78,7 @@ resource "xenorchestra_vm" "secondary" {
 
   network {
     network_id       = data.xenorchestra_network.master.id
-    mac_address      = macaddress.mac_master_secondaries[count.index].address
+    mac_address      = local.effective_master_secondary_macs[count.index]
     expected_ip_cidr = var.master_expected_cidr
   }
 
